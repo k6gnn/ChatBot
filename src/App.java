@@ -3,65 +3,75 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        int pmolvl = 5;
-        boolean ChillBot = true;
-        int questionCount = 0;
+        int moodLevel = 5;
+        boolean isPatient = true;
+        int userQuestionCount = 0;
         
-        System.out.println("Hello! My name is Kanans Tears. What is yours?");
-        String name = scanner.nextLine();
-        System.out.println("Hello " + name + ". Dont pmo.");
+        System.out.println("Hello! My name is Kanans Tears. What is your name?");
+        String userName = scanner.nextLine();
+        System.out.println("Hello " + userName + ". Please maintain appropriate behavior.");
         
-        boolean chatting = true;
-        while (chatting) {
-            if (pmolvl > 7) {
-                System.out.println("I'm super happy! What can I do for you? 😊");
-            } else if (pmolvl < 3) {
-                System.out.println("leave me alone bruh");
+        boolean isChatting = true;
+        
+        while (isChatting) {
+            if (moodLevel > 7) {
+                System.out.println("I'm feeling great! How may I assist you today? 😊");
+            } else if (moodLevel < 3) {
+                System.out.println("I am not in the mood to chat right now.");
             } else {
-                System.out.println("What can I do for u?");
+                System.out.println("How can I assist you?");
             }
             
-            String input = scanner.nextLine();
-            questionCount++;
+            String userInput = scanner.nextLine().toLowerCase();
+            userQuestionCount++;
             
-            if (questionCount > 5 && ChillBot) {
-                ChillBot = false;
-                pmolvl -= 2;
-                System.out.println("gtfo curious george");
+            if (userQuestionCount > 5 && isPatient) {
+                isPatient = false;
+                moodLevel -= 2;
+                System.out.println("You are asking too many questions. Please be mindful.");
             }
             
-            if (input.toLowerCase().equals("bye")) {
-                System.out.println("Goodbye " + name + "! Have a great day!");
-                chatting = false;
-            } else {
-                if (input.toLowerCase().contains("weather")) {
-                    pmolvl--; // dont ask ts guy about weather he doesnt know how to use APIs bruh
-                    System.out.println("I am still learning");
+            switch (userInput) {
+                case "bye":
+                    System.out.println("Goodbye " + userName + "! Have a great day!");
+                    isChatting = false;
+                    break;
+                
+                case "weather":
+                    moodLevel--;
+                    System.out.println("I am still learning about weather updates.");
                     System.out.println("Would you like to know about tomorrow's weather? (yes/no)");
-                    String weatherResponse = scanner.nextLine();
-                    if (weatherResponse.toLowerCase().equals("yes")) {
-                        pmolvl -= 2;
-                        System.out.println("DAWG I SAID I'M STILL LEARNING ");
+                    String weatherResponse = scanner.nextLine().toLowerCase();
+                    if (weatherResponse.equals("yes")) {
+                        moodLevel -= 2;
+                        System.out.println("I apologize, but I am not capable of providing weather updates at the moment.");
                     }
-                } else if (input.toLowerCase().contains("sorry")) {
-                    pmolvl += 2; 
-                    System.out.println("I forgive u but dont let it happen again dawg");
-                } else if (input.toLowerCase().contains("thank")) {
-                    pmolvl++; 
-                    System.out.println("Bro js said thanks to a bot. Appreciate it gng");
-                } else {
-                    System.out.println("Respect the newbies bro. Would you like to ask me something else? (yes/no)");
-                    String continue_chat = scanner.nextLine();
-                    if (continue_chat.toLowerCase().contains("n")) {
-                        System.out.println("bye " + name + "! Have a " + 
-                            (pmolvl > 5 ? "wonderful" : "shitty") + " day!");
-                        chatting = false;
+                    break;
+                
+                case "sorry":
+                    moodLevel += 2;
+                    System.out.println("I appreciate your apology. Let’s continue our conversation.");
+                    break;
+                
+                case "thank you":
+                case "thanks":
+                    moodLevel++;
+                    System.out.println("You are very welcome! I appreciate your kindness.");
+                    break;
+                
+                default:
+                    System.out.println("I am here to assist you. Would you like to ask something else? (yes/no)");
+                    String continueChat = scanner.nextLine().toLowerCase();
+                    if (continueChat.contains("n")) {
+                        System.out.println("Goodbye, " + userName + "! Have a " + (moodLevel > 5 ? "wonderful" : "challenging") + " day!");
+                        isChatting = false;
                     }
-                }
+                    break;
             }
             
-            pmolvl = Math.min(10, Math.max(0, pmolvl)); //dont make my bot suicidal yall
+            moodLevel = Math.min(10, Math.max(0, moodLevel));
         }
+        
         scanner.close();
     }
 }
