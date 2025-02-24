@@ -104,6 +104,7 @@ public class App {
             }
             
             // Determine responses based on keywords.
+            // U can type bye to exit from a conversation.
             if (userInput.contains("how are ")) {
                 System.out.println("I'm just a bot, but I'm doing great! How about you?");
                 System.out.println("I'm curious to know what makes your day great!");
@@ -124,7 +125,6 @@ public class App {
                 System.out.println("Would you like to try a joke or play a quick game?");
             } else if (userInput.contains("feel")) {
                 System.out.println("I'm here to listen. How are you feeling today? I am feeling " + (moodLevel > 5 ? "happy" : "sad") + ".");
-                System.out.println("Feelings are important. What's been the highlight of your day?");
                 String mood = scanner.nextLine().toLowerCase();
                 if(mood.contains("happy")) {
                     System.out.println("I'm glad to hear that!");
