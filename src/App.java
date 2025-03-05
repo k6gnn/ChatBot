@@ -6,7 +6,6 @@ public class App {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
         int moodLevel = 8;
-        boolean isPatient = true;
         int userQuestionCount = 0;
 
         String[] greetings = {
@@ -18,36 +17,28 @@ public class App {
         };
 
         System.out.println(greetings[random.nextInt(greetings.length)]);
-        String userName = scanner.nextLine();
+        String userName = scanner.nextLine().trim();
+        if (userName.isEmpty()) {
+            System.out.println("You don't know who ur talking to kid. \nCome back when you know your name.");
+            System.exit(0);
+        } 
         System.out.println("\nHello " + userName + ". Please, treat me well :)");
 
         boolean continueChat = true;
         while (continueChat) {
             displayMenu();
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+            int choice = getUserChoice(scanner);
 
             switch (choice) {
-                case 1:
-                    chatWithBot(scanner, userName, moodLevel, userQuestionCount, isPatient);
-                    break;
-                case 2:
-                    System.out.println("\nWhy did the chicken cross the road? Idk, life was easier on the other side.\n");
-                    break;
-                case 3:
-                    System.out.println("Believe in yourself and all that you are. Know that there is something inside you that is greater than any obstacle.");
-                    break;
-                case 4:
-                    playGame(scanner, random);
-                    break;
-                case 5:
+                case 1 -> chatWithBot(scanner, userName, moodLevel, userQuestionCount);
+                case 2 -> System.out.println("\nWhy did the chicken cross the road? Because life was easier on the other side.\n");
+                case 3 -> System.out.println("Believe in yourself and all that you are. You are greater than any obstacle.");
+                case 4 -> playGame(scanner, random);
+                case 5 -> {
                     System.out.println("Goodbye, " + userName + "! Have a great day!");
                     continueChat = false;
-                    break;
-                default:
-                    System.out.println("Invalid choice! Let's just chat.");
-                    chatWithBot(scanner, userName, moodLevel, userQuestionCount, isPatient);
-                    break;
+                }
+                default -> System.out.println("Invalid choice! Please pick from the menu.");
             }
         }
         scanner.close();
@@ -62,13 +53,25 @@ public class App {
         System.out.println("5. Exit");
     }
 
+    public static int getUserChoice(Scanner scanner) {
+        while (true) {
+            System.out.print("Enter your choice: ");
+            if (scanner.hasNextInt()) {
+                int choice = scanner.nextInt();
+                scanner.nextLine(); 
+                return choice;
+            } else {
+                System.out.println("Invalid input! Please enter a number between 1 and 5.");
+                scanner.nextLine(); 
+            }
+        }
+    }
+
     public static void playGame(Scanner scanner, Random random) {
-        boolean playAgain = true;
-        while (playAgain) {
+        while (true) {
             System.out.println("Let's play a number guessing game! Guess a number between 1 and 5:");
             int correctNumber = random.nextInt(5) + 1;
-            int userGuess = scanner.nextInt();
-            scanner.nextLine();
+            int userGuess = getUserChoice(scanner);
 
             if (userGuess == correctNumber) {
                 System.out.println("Congrats! You guessed the correct number.");
@@ -78,86 +81,56 @@ public class App {
 
             System.out.println("Do you want to play again? (yes/no)");
             String response = scanner.nextLine().trim().toLowerCase();
-            playAgain = response.equals("yes");
+            if (!response.equals("yes")) break;
         }
         System.out.println("Returning to the menu...");
     }
 
-    public static void chatWithBot(Scanner scanner, String userName, int moodLevel, int userQuestionCount, boolean isPatient) {
-        System.out.println("Let's chat! Ask me about: \nHobbies\nWhat can I do\nHow I feel\nAsk me my name again\nAsk me how I feel\nOr you can just confuse me because I am not that advanced\nOrrr you can type 'bye' to return to the menu.");
-        boolean isChatting = true;
+    public static void chatWithBot(Scanner scanner, String userName, int moodLevel, int userQuestionCount) {
+        System.out.println("Let's chat! You can ask about: \nhobbies, \nwhat I can do, \nhow I feel, \nor my name. Type 'bye' to return to the menu.");
         
-        while (isChatting) {
+        while (true) {
             System.out.print("> ");
             String userInput = scanner.nextLine().trim().toLowerCase();
             userQuestionCount++;
-            
-            if (userQuestionCount > 5 && isPatient) {
-                isPatient = false;
+
+            if (userQuestionCount > 5) {
                 moodLevel -= 2;
-                System.out.println("You are asking too many questions. I am not even 1 year old.");
+                System.out.println("You're asking a lot of questions! I'm just a simple bot.");
             }
             
-            if (userInput.equals("bye")) {
-                System.out.println("Goodbye " + userName + "! Returning to the menu.");
+            if (userInput.contains("bye")) {
+                System.out.println("Goodbye, " + userName + "! Returning to the menu.");
                 return;
             }
-            
-            
-            if (userInput.contains("how are ")) {
-                System.out.println("I'm just a bot, but I'm doing great! How about you?");
-                System.out.println("I'm curious to know what makes your day! Are you happy or sad?");
+
+            if (userInput.contains("how are")) {
+                System.out.println("I'm just a bot, but I'm " + (moodLevel > 5 ? "happy!" : "a little down.") + " How about you? Happy or sad?");
                 String mood = scanner.nextLine().toLowerCase();
-                if(mood.contains("happy")) {
-                    System.out.println("I'm glad to hear that!");
-                } else if(mood.contains("sad")) {
-                    System.out.println("I'm sorry to hear that. You should try to be more positive!");
-                } else {
-                    System.out.println("That's interesting.");
-                }
+                System.out.println(mood.contains("happy") ? "I'm glad to hear that!" : "I'm sorry, I hope things get better.");
             } else if (userInput.contains("your name")) {
                 System.out.println("My name is Kanans Tears!");
-            } else if (userInput.contains("than")) {
-                System.out.println("You are more than welcome!");                 
-            } else if (userInput.contains("what can you do") || userInput.contains("what can u do") || userInput.contains("what can do?")) {
-                System.out.println("I can chat with you, tell jokes, share motivational quotes, and even play a game!");
-                System.out.println("Would you like to try a joke or play a quick game? (yes/no)");
-            
-                String response = scanner.nextLine().trim().toLowerCase();
-            
-                if (response.equals("y")) {
-                    System.out.println("Great! I'll redirect you to the menu so you can pick again.");
+            } else if (userInput.contains("than") ) {
+                System.out.println("You are more than welcome!");
+            } else if (userInput.contains("what can") || userInput.equals("what can u do")) {
+                System.out.println("I can chat, tell jokes, share quotes, and play games. Want to try one? (yes/no)");
+                if (scanner.nextLine().trim().equalsIgnoreCase("y")) {
                     return;
                 } else {
-                    System.out.println("Okay, you didn't have to be so rude. Bye!");
+                    System.out.println("Okay then. Goodbye!");
                     System.exit(0);
-                }            
-            } else if (userInput.contains("feel")) {
-                System.out.println("I'm here to listen. How are you feeling today? I am feeling " + (moodLevel > 5 ? "happy" : "sad") + ".");
-                String mood = scanner.nextLine().toLowerCase();
-                if(mood.contains("happy")) {
-                    System.out.println("I'm glad to hear that!");
-                } else if(mood.contains("sad")) {
-                    System.out.println("I'm sorry to hear that. You should try to be more positive!");
-                } 
+                }
             } else if (userInput.contains("hobb")) {
-                System.out.println("I love talking with people about their hobbies. What are yours?");
-                String hobbyDetail = scanner.nextLine().trim();
-                System.out.println("Wow, " + hobbyDetail + " sounds really interesting!");
+                System.out.println("I love talking to people about hobbies! I am just a bot, I don't really have any... But I would like to hear your hobbies! What do you like to do for fun?");
+                System.out.println("Wow, " + scanner.nextLine().trim() + " sounds really fun!");
             } else {
-                System.out.println("I'm not sure how to respond to that. Can you ask me something else? (yes/no)");
-                String userResponse = scanner.nextLine().trim().toLowerCase();
-
-                if (userResponse.equals("n")) {
+                System.out.println("I'm not sure how to respond to that. Ask me something else? (yes/no)");
+                if (scanner.nextLine().trim().equalsIgnoreCase("no")) {
                     System.out.println("Goodbye!");
-                    System.exit(0);
-                } else if (userResponse.contains("y")){
-                    System.out.println("Great! Pick something else from the menu.");
                     return;
                 }
-
             }
+            
         }
     }
-    
 }
