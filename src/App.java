@@ -84,7 +84,7 @@ public class App {
     }
 
     public static void chatWithBot(Scanner scanner, String userName, int moodLevel, int userQuestionCount, boolean isPatient) {
-        System.out.println("Let's chat! Ask me anything or type 'bye' to return to the menu.");
+        System.out.println("Let's chat! Ask me about: \nHobbies\nWhat can I do\nHow I feel\nAsk me my name again\nAsk me how I feel\nOr you can just confuse me because I am not that advanced\nOrrr you can type 'bye' to return to the menu.");
         boolean isChatting = true;
         
         while (isChatting) {
@@ -103,11 +103,10 @@ public class App {
                 return;
             }
             
-            // Determine responses based on keywords.
-            // U can type bye to exit from a conversation.
+            
             if (userInput.contains("how are ")) {
                 System.out.println("I'm just a bot, but I'm doing great! How about you?");
-                System.out.println("I'm curious to know what makes your day great!");
+                System.out.println("I'm curious to know what makes your day! Are you happy or sad?");
                 String mood = scanner.nextLine().toLowerCase();
                 if(mood.contains("happy")) {
                     System.out.println("I'm glad to hear that!");
@@ -120,9 +119,19 @@ public class App {
                 System.out.println("My name is Kanans Tears!");
             } else if (userInput.contains("than")) {
                 System.out.println("You are more than welcome!");                 
-            } else if (userInput.contains("what can you do")) {
+            } else if (userInput.contains("what can you do") || userInput.contains("what can u do") || userInput.contains("what can do?")) {
                 System.out.println("I can chat with you, tell jokes, share motivational quotes, and even play a game!");
-                System.out.println("Would you like to try a joke or play a quick game?");
+                System.out.println("Would you like to try a joke or play a quick game? (yes/no)");
+            
+                String response = scanner.nextLine().trim().toLowerCase();
+            
+                if (response.equals("y")) {
+                    System.out.println("Great! I'll redirect you to the menu so you can pick again.");
+                    return;
+                } else {
+                    System.out.println("Okay, you didn't have to be so rude. Bye!");
+                    System.exit(0);
+                }            
             } else if (userInput.contains("feel")) {
                 System.out.println("I'm here to listen. How are you feeling today? I am feeling " + (moodLevel > 5 ? "happy" : "sad") + ".");
                 String mood = scanner.nextLine().toLowerCase();
@@ -136,13 +145,13 @@ public class App {
                 String hobbyDetail = scanner.nextLine().trim();
                 System.out.println("Wow, " + hobbyDetail + " sounds really interesting!");
             } else {
-                System.out.println("I'm not sure how to respond to that. Can you ask me something else?");
+                System.out.println("I'm not sure how to respond to that. Can you ask me something else? (yes/no)");
                 String userResponse = scanner.nextLine().trim().toLowerCase();
 
-                if (userResponse.equals("no")) {
+                if (userResponse.equals("n")) {
                     System.out.println("Goodbye!");
                     System.exit(0);
-                } else if (userResponse.contains("yes")){
+                } else if (userResponse.contains("y")){
                     System.out.println("Great! Pick something else from the menu.");
                     return;
                 }
